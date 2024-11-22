@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState, useReducer } from "react";
-import { useNavigate } from "react-router-dom";
 import Peer from "peerjs";
 import socketIoClient from "socket.io-client";
 import { v4 as uuidV4 } from "uuid";
@@ -11,95 +10,132 @@ export const RoomContext = createContext(null);
 const ws = socketIoClient("ws://localhost:8000");
 
 export const RoomProvider = ({ children }) => {
-  const navigate = useNavigate();
-  const [me, setMe] = useState(null);
-  const [stream, setStream] = useState(null);
-  const [peers, dispatch] = useReducer(peersReducer, {});
-  const [screenSharingId, setScreenSharingId] = useState(null);
+  const [me, setMe] = useState(null); // PeerJS instance
+  const [stream, setStream] = useState(null); // Local media stream
+  const [peers, dispatch] = useReducer(peersReducer, {}); // Peer connections
+  const [currentRoom, setCurrentRoom] = useState(null); // Current room ID
 
-  const enterRoom = ({ roomId }) => {
-    console.log("Navigating to Room ID:", roomId);
-    navigate(`/room/${roomId}`);
-  };
-
-  const switchScreen = (newStream) => {
-    setStream(newStream);
-    setScreenSharingId(me?.id || "");
-  };
-
-  const shareScreen = () => {
-    if (screenSharingId) {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(switchScreen);
-    } else {
-      navigator.mediaDevices.getDisplayMedia({ video: true }).then(switchScreen);
+  // Helper function: Join matchmaking queue
+  const joinQueue = () => {
+    if (me) {
+      console.log("Joining queue with peerId:", me.id);
+      ws.emit("join-queue", { peerId: me.id });
     }
   };
 
+  // Handle WebSocket and PeerJS events
   useEffect(() => {
-    const meId = uuidV4();
-    const peer = new Peer(meId);
+    if (!me || !stream) return;
 
-    peer.on("open", (id) => {
-      console.log("Peer connection open with ID:", id);
+    // Event: Room assignment from the server
+    const handleRoomAssigned = ({ roomId, peerIds }) => {
+      if (!peerIds.includes(me.id)) return;
+
+      console.log("Assigned room:", roomId, "Peers:", peerIds);
+      setCurrentRoom(roomId);
+
+      // Handle incoming calls
+      me.on("call", (call) => {
+        console.log("Incoming call from:", call.peer);
+        call.answer(stream);
+
+        call.on("stream", (peerStream) => {
+          console.log("Stream received from peer:", call.peer);
+          dispatch(addPeerAction(call.peer, peerStream));
+        });
+
+        call.on("close", () => {
+          console.log("Call closed by peer:", call.peer);
+          dispatch(removePeerAction(call.peer));
+        });
+
+        call.on("error", (error) => {
+          console.error("Error in incoming call:", error);
+        });
+      });
+
+      // Call all peers in the room
+      peerIds.forEach((peerId) => {
+        if (peerId !== me.id) {
+          console.log("Calling peer:", peerId);
+          const call = me.call(peerId, stream);
+
+          call.on("stream", (peerStream) => {
+            console.log("Stream received from peer:", peerId);
+            dispatch(addPeerAction(peerId, peerStream));
+          });
+
+          call.on("close", () => {
+            console.log("Call closed by peer:", peerId);
+            dispatch(removePeerAction(peerId));
+          });
+
+          call.on("error", (error) => {
+            console.error("Error in outgoing call:", error);
+          });
+        }
+      });
+    };
+
+    // Event: User disconnection
+    const handleUserDisconnected = ({peerId}) => {
+      console.log(`User with peerId ${peerId} disconnected`);
+    
+      dispatch(removePeerAction(peerId));
+    };
+
+    // Register WebSocket listeners
+    ws.on("room-assigned", handleRoomAssigned);
+    ws.on("user-disconnected", handleUserDisconnected);
+
+    // Cleanup listeners on unmount
+    return () => {
+      ws.off("room-assigned", handleRoomAssigned);
+      ws.off("user-disconnected", handleUserDisconnected);
+    };
+  }, [me, stream , peers]);
+
+  // Initialize PeerJS and local media stream
+  useEffect(() => {
+    const peerId = uuidV4();
+    const peer = new Peer(peerId);
+
+    peer.on("open", () => {
+      console.log("Peer connection established with ID:", peerId);
       setMe(peer);
+      joinQueue(); // Join queue after PeerJS is initialized
     });
 
-    peer.on("error", (err) => console.error("Peer connection error:", err));
-
+    // peer.on('error', (err) => {
+    //   console.error('PeerJS error:', err);
+      
+    //     peer.reconnect();
+      
+    // });
+    
+    // Get user media
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((mediaStream) => {
         setStream(mediaStream);
+        console.log("User media initialized:", mediaStream);
       })
       .catch((error) => {
-        console.log("Error accessing media devices:", error);
+        console.error("Error accessing user media:", error);
       });
 
-    ws.on("room-created", enterRoom);
-
+    // Cleanup PeerJS instance on unmount
     return () => {
-      ws.off("room-created", enterRoom);
-      peer.disconnect();
+      if (peer) {
+        console.log("Cleaning up PeerJS instance for ID:", peerId);
+        peer.destroy();
+      }
     };
   }, []);
 
-  useEffect(() => {
-    if (!me || !stream) return;
-
-    ws.on("user-joined", ({ peerId }) => {
-      console.log("Attempting to call peer:", peerId);
-      const call = me.call(peerId, stream);
-      call.on("stream", (peerStream) => {
-        console.log("Received stream from peer:", peerId);
-        dispatch(addPeerAction(peerId, peerStream));
-      });
-      call.on("error", (error) => console.error("Error in call:", error));
-    });
-
-    me.on("call", (call) => {
-      console.log("Incoming call from:", call.peer);
-      call.answer(stream);
-      call.on("stream", (peerStream) => {
-        console.log("Received peer stream from call:", call.peer);
-        dispatch(addPeerAction(call.peer, peerStream));
-      });
-      call.on("error", (error) => console.error("Error in receiving call stream:", error));
-    });
-
-    ws.on("user-disconnected", (peerId) => {
-      console.log("User disconnected with peerId:", peerId);
-      dispatch(removePeerAction(peerId));
-    });
-
-    return () => {
-      ws.off("user-joined");
-      ws.off("user-disconnected");
-      me.off("call");
-    };
-  }, [me, stream]);
-
+  // Return context provider
   return (
-    <RoomContext.Provider value={{ stream, ws, me, shareScreen, peers }}>
+    <RoomContext.Provider value={{ stream, ws, me, peers, currentRoom }}>
       {children}
     </RoomContext.Provider>
   );

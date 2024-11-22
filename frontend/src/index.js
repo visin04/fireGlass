@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter as Router,Route,Routes} from 'react-router-dom';
 import { RoomProvider } from './context/RoomContext';
-import Home from './components/pages/Home';
+
 import Room from './components/pages/Room';
 
 
@@ -15,8 +15,8 @@ root.render(
     <Router>
       <RoomProvider>
         <Routes>
-          <Route path='/' element={<Home/>}/>
-          <Route path='/room/:id' element={<Room/>}/>
+        
+          <Route path='/' element={<Room/>}/>
         </Routes>
       </RoomProvider>
     </Router>

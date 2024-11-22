@@ -1,6 +1,6 @@
 
 import './App.css';
-import JoinButton from './components/JoinButton';
+import Room from './components/pages/Room';
 
 
 
@@ -8,7 +8,7 @@ function App() {
 
   return (
     <div className="App ">
-        <JoinButton/>
+        <Room/>
     </div>
   );
 }
