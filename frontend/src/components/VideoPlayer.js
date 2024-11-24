@@ -17,6 +17,9 @@ export default function VideoPlayer({ stream }) {
     }, [stream]); // Include `stream` as a dependency
 
     return (
-        <video ref={videoRef} autoPlay />
+        <div >
+
+            <video ref={videoRef} autoPlay style={{width:'530px'}} />
+        </div>
     );
 }

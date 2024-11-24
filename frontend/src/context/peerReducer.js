@@ -14,6 +14,10 @@ export const peersReducer = (state, action) => {
         delete newState[action.payload.peerId];
         return newState;
   
+        case "CLEAR_PEERS":
+          return {}; // Clear all peers
+
+          
       default:
         return state;
     }
