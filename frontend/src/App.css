@@ -36,3 +36,23 @@
     transform: rotate(360deg);
   }
 }
+.stream-container{
+  display: flex;
+  justify-content: space-evenly;
+}
+.button-container{
+  display: flex;
+  justify-content: space-around
+}
+.black-box {
+  background: black;
+  width: 646px;
+  height: 478px;
+  display: flex
+;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}

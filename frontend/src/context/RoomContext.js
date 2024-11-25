@@ -134,6 +134,8 @@ export const RoomProvider = ({ children }) => {
           call.on("close", () => {
             console.log("Call closed by peer:", peerId);
             dispatch(removePeerAction(peerId));
+    
+            
           });
     
           call.on("error", (error) => {
@@ -168,37 +170,54 @@ export const RoomProvider = ({ children }) => {
 
   useEffect(() => {
     const peerId = uuidV4();
-    const peer = new Peer(peerId);
-
+    const peer = new Peer(peerId, {
+      host: 'localhost',
+      port: 9000,
+      path: '/myapp',
+    });
+    
+  
     peer.on("open", () => {
       console.log("Peer connection established with ID:", peerId);
       setMe(peer);
       joinQueue();
     });
-
+  
     peer.on("error", (err) => {
       console.error("PeerJS error:", err);
       if (peer.disconnected) {
         peer.reconnect();
       }
     });
-
+  
     peer.on("disconnected", () => {
       console.log("Peer disconnected, attempting to reconnect...");
       peer.reconnect();
     });
-
+  
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then(setStream)
-      .catch((error) => console.error("Error accessing media devices:", error));
-
+      .catch((error) => {
+        console.error("Error accessing media devices:", error);
+        
+        // Show alert based on the specific error
+        if (error.name === "NotFoundError") {
+          alert("No camera or microphone found. Please connect a device and reload the page.");
+        } else if (error.name === "NotAllowedError") {
+          alert("Permission to access camera and microphone was denied. Please enable permissions and reload the page.");
+        } else {
+          alert("An error occurred while accessing media devices. Please check your settings.");
+        }
+      });
+  
     return () => {
       if (peer && !peer.destroyed) {
         peer.destroy();
       }
     };
   }, []);
+  
 
   return (
     <RoomContext.Provider

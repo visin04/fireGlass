@@ -19,7 +19,7 @@ export default function VideoPlayer({ stream }) {
     return (
         <div >
 
-            <video ref={videoRef} autoPlay style={{width:'530px'}} />
+            <video ref={videoRef} autoPlay />
         </div>
     );
 }
