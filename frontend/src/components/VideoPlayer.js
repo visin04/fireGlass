@@ -17,9 +17,8 @@ export default function VideoPlayer({ stream }) {
     }, [stream]); // Include `stream` as a dependency
 
     return (
-        <div >
-
-            <video ref={videoRef} autoPlay />
+        <div className="video-player-container">
+            <video ref={videoRef} className="video-element" autoPlay />
         </div>
     );
 }

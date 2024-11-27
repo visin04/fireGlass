@@ -1,58 +1,153 @@
-.App {
-  text-align: center;
+/* General container for the video player */
+.video-player-container {
+  width: 800px; /* Increased width */
+  height: 600px; /* Increased height */
+  border: 2px solid #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.1);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Video element styles */
+.video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Black box styles for loading placeholders */
+.black-box {
+  background: black;
+  width: 800px; /* Matches updated video player width */
+  height: 600px; /* Matches updated video player height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 28px; /* Larger text size for better visibility */
+  font-weight: bold;
+  border-radius: 10px;
 }
 
-.App-header {
-  background-color: #282c34;
+/* Stream container styles */
+.stream-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px; /* Larger spacing between video players */
+}
+
+/* Button container styles */
+.button-container {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Room container */
+.room-container {
+  padding: 20px;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
+  font-family: 'Arial', sans-serif;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-.stream-container{
-  display: flex;
-  justify-content: space-evenly;
-}
-.button-container{
-  display: flex;
-  justify-content: space-around
-}
-.black-box {
-  background: black;
-  width: 646px;
-  height: 478px;
-  display: flex
-;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 24px;
+/* Stream information styles */
+.stream-info {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
   font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Button styles */
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+.btn-warning {
+  background-color: #ff9800;
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: #ff5722;
+}
+/* Project Name Styles */
+.project-name {
+  font-size: 2rem; /* Large and prominent */
+  font-weight: bold;
+  color: white;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+}
+
+/* Room Status Styles */
+.room-status {
+  font-size: 1rem; /* Smaller font size for Roomed/Waiting */
+  font-weight: normal;
+  color: #f0f0f0; /* Light text color */
+  margin: 5px 0;
+}
+
+/* Responsive Design */
+
+/* Medium devices (tablets, etc.) */
+@media (max-width: 768px) {
+  .video-player-container,
+  .black-box {
+    width: 95%; /* Scaled down width */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  .stream-info {
+    font-size: 1.2rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+  }
+}
+
+/* Small devices (mobile phones) */
+@media (max-width: 480px) {
+  .video-player-container,
+  .black-box {
+    width: 100%;
+    height: auto;
+  }
+
+  .stream-info {
+    font-size: 1rem;
+    padding: 8px 15px;
+  }
+
+  button {
+    font-size: 0.8rem;
+    padding: 7px 10px;
+  }
 }

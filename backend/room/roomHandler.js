@@ -169,6 +169,7 @@ const roomHandler = (socket) => {
     console.error("Socket error:", err);
     socket.emit("error", { message: "An internal error occurred." });
   });
+ 
 };
 
 module.exports = { roomHandler };

@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon backend/server.js"
+    "start": "npm run start:both",
+    "start:node": "nodemon backend/server.js",
+    "start:peer": "npx peerjs --port 9000 --key peerjs --path /myapp",
+    "start:both": "concurrently \"npm run start:node\" \"npm run start:peer\""
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +22,7 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "concurrently": "^8.2.0"
   }
 }

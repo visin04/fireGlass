@@ -3,7 +3,6 @@ import RoomContext from "../../context/RoomContext";
 import VideoPlayer from "../VideoPlayer";
 import ShareScreen from "../ShareScreen";
 
-
 export default function Room() {
   const { ws, me, stream, shareScreen, peers, currentRoom, handleNextClick } =
     useContext(RoomContext);
@@ -23,14 +22,15 @@ export default function Room() {
 
   return (
     <div className="room-container">
+      {/* Project Name */}
+      <h1 className="project-name">Canadyy</h1>
+
       {/* Room information */}
       <div className="stream-info">
-        {currentRoom ? (
-          <p>
-            Connected to Room ID: <strong>{currentRoom}</strong>
-          </p>
+        {Object.keys(peers).length > 0 ? (
+          <h5 className="room-status">Roomed</h5>
         ) : (
-          <p>Waiting in the queue...</p>
+          <p className="room-status">Waiting</p>
         )}
       </div>
 
@@ -38,21 +38,20 @@ export default function Room() {
       <div className="stream-container">
         {stream ? (
           <>
-            <div className="video-wrapper">
-              
+            <div className="video-player-container">
               <VideoPlayer key="local-stream" stream={stream} />
             </div>
             {Object.entries(peers).length > 0 ? (
               Object.values(peers).map((peer) => (
-                <div key={peer.id} className="video-wrapper peer-wrapper">
-                  
+                <div
+                  key={peer.id}
+                  className="video-player-container peer-wrapper"
+                >
                   <VideoPlayer stream={peer.stream} />
                 </div>
               ))
             ) : (
-              <div className="black-box">
-              Loading...
-            </div>
+              <div className="black-box">Loading...</div>
             )}
           </>
         ) : (
@@ -60,23 +59,15 @@ export default function Room() {
         )}
       </div>
 
-      {/* Screen sharing button */}
+      {/* Screen sharing and next button */}
       <div className="button-container">
-        <div>
-
         <ShareScreen onClick={shareScreen} />
-        </div>
         {currentRoom && (
-        <div >
           <button onClick={handleNextClick} className="btn btn-warning">
             Next
           </button>
-        </div>
-      )}
+        )}
       </div>
-
-      {/* Next Button */}
-      
     </div>
   );
 }

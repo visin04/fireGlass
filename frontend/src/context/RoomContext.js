@@ -7,7 +7,7 @@ import { addPeerAction, removePeerAction, clearPeersAction } from "../context/pe
 
 export const RoomContext = createContext(null);
 
-const ws = socketIoClient("ws://localhost:8000");
+const ws = socketIoClient("http://localhost:8000");
 
 export const RoomProvider = ({ children }) => {
   const [me, setMe] = useState(null); // PeerJS instance
@@ -185,6 +185,7 @@ export const RoomProvider = ({ children }) => {
   
     peer.on("error", (err) => {
       console.error("PeerJS error:", err);
+      joinQueue()
       if (peer.disconnected) {
         peer.reconnect();
       }
