@@ -1,20 +1,19 @@
 {
   "name": "videochat",
   "version": "1.0.0",
+  "description": "A real-time video chat application",
   "main": "server.js",
   "scripts": {
-    "start": "npm run start:both",
-    "start:node": "nodemon backend/server.js",
-    "start:peer": "npx peerjs --port 9000 --key peerjs --path /myapp",
-    "start:both": "concurrently \"npm run start:node\" \"npm run start:peer\""
+    "start": "node backend/server.js",
+    "start:dev": "nodemon backend/server.js"
   },
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "env": "^0.0.2",
     "express": "^4.21.1",
+    "http": "^0.0.1-security",
     "peer": "^1.0.2",
     "peerjs": "^1.5.4",
     "socket.io": "^4.8.1",
@@ -22,7 +21,6 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7",
-    "concurrently": "^8.2.0"
+    "nodemon": "^3.1.7"
   }
 }

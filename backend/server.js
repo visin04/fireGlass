@@ -71,13 +71,13 @@ process.on("unhandledRejection", (err) => {
 });
 
 // Serve static files in production
-// if (process.env.NODE_ENV === "production") {
-//   // Serve frontend build files
-//   app.use(express.static(path.join(__dirname, "../frontend/build")));
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
-//   });
-// }
+if (process.env.NODE_ENV === "production") {
+  // Serve frontend build files
+  app.use(express.static(path.join(__dirname, "../frontend/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
+  });
+}
 
 // Start the server
 server.listen(port, (err) => {

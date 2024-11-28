@@ -1,10 +1,9 @@
 import React, { useContext, useEffect } from "react";
 import RoomContext from "../../context/RoomContext";
 import VideoPlayer from "../VideoPlayer";
-import ShareScreen from "../ShareScreen";
 
 export default function Room() {
-  const { ws, me, stream, shareScreen, peers, currentRoom, handleNextClick } =
+  const { ws, me, stream, peers, currentRoom, handleNextClick } =
     useContext(RoomContext);
 
   useEffect(() => {
@@ -51,7 +50,7 @@ export default function Room() {
                 </div>
               ))
             ) : (
-              <div className="black-box">Loading...</div>
+              <div className="black-box">Irunga bhaii...</div>
             )}
           </>
         ) : (
@@ -59,12 +58,11 @@ export default function Room() {
         )}
       </div>
 
-      {/* Screen sharing and next button */}
+      {/* Next button */}
       <div className="button-container">
-        <ShareScreen onClick={shareScreen} />
         {currentRoom && (
-          <button onClick={handleNextClick} className="btn btn-warning">
-            Next
+          <button onClick={handleNextClick} className="btn-next">
+             <i className="fas fa-arrow-right"></i>
           </button>
         )}
       </div>

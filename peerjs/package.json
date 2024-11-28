@@ -1,0 +1,21 @@
+{
+  "name": "videochat",
+  "version": "1.0.0",
+  "description": "A real-time video chat application",
+  "main": "server.js",
+  "scripts": {
+    "start": "peerjs --port 9000 --key peerjs --path /myapp"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "http": "^0.0.1-security",
+    "peer": "^1.0.2",
+    "peerjs": "^1.5.4",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
