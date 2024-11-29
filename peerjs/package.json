@@ -4,7 +4,7 @@
   "description": "A real-time video chat application",
   "main": "server.js",
   "scripts": {
-    "start": "peerjs --port 9000 --key peerjs --path /myapp"
+    "start": "peerjs --port 9000 --key peerjs --path /"
   },
   "author": "",
   "license": "ISC",

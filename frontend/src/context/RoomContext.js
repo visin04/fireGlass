@@ -120,7 +120,7 @@ export const RoomProvider = ({ children }) => {
     const peer = new Peer(peerId, {
       host: 'localhost',
       port: 9000,
-      path: '/myapp',
+      path: '/',
     });
 
     peer.on("open", () => {

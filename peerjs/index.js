@@ -1,3 +1,5 @@
-import { PeerServer } from "peer";
+const { PeerServer } = require("peer");
 
-PeerServer({ port: 9000, path: "/myapp" });
+const peerServer = PeerServer({ port: 9000, path: "/" });
+
+console.log("PeerServer is running on port 9000");
