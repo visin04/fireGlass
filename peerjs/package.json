@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "A real-time video chat application",
   "main": "server.js",
+  
   "scripts": {
-    "start": "peerjs --port 9000 --key peerjs --path /"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
