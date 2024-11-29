@@ -118,7 +118,7 @@ export const RoomProvider = ({ children }) => {
   useEffect(() => {
     const peerId = uuidV4();
     const peer = new Peer(peerId, {
-      host: 'localhost',
+      host: '3.24.134.34',
       port: 9000,
       path: '/',
     });
